@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light min-vh-100">
+
+  <%- include ('partials/navbar.ejs') %>
+
+  <div class="container my-5">
+    <div class="row g-4"> 
+      
+      <div class="col-12 col-md-4">
+        <div class="card bg-secondary bg-opacity-10 border-secondary p-4 shadow-sm text-light position-sticky" style="top: 20px;">
+          <h4 class="fw-bold text-white mb-3">Add New Task</h4>
+          
+          <form action="/add-card" method="POST">
+            <div class="mb-3">
+              <label class="form-label text-white-50 small fw-medium">Task Title</label>
+              <input type="text" class="form-control bg-dark border-secondary text-light shadow-none" name="title" placeholder="e.g., Fix database connection" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-white-50 small fw-medium">Description / Notes</label>
+              <textarea class="form-control bg-dark border-secondary text-light shadow-none" name="text" rows="4" placeholder="Enter details..." required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-white-50 small fw-medium">Deadline Date</label>
+              <input type="date" class="form-control bg-dark border-secondary text-light shadow-none" name="deadline" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-medium py-2">Create Task</button>
+          </form>
+
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-8">
+        <h4 class="fw-bold text-white mb-3">Your Tasks</h4>
+        
+        <% if (cardsData.length === 0) { %>
+          <div class="text-center py-5 border border-secondary border-dashed rounded-3 bg-secondary bg-opacity-5">
+            <p class="text-white-50 mb-0">No tasks pending. Nice job!</p>
+          </div>
+        <% } %>
+
+        <% cardsData.forEach(card => { %>
+          
+          <div class="card mb-3 bg-secondary bg-opacity-10 border-secondary shadow-sm text-light">
+            <div class="card-body p-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+              
+              <div style="max-width: 80%;">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  
+                  <h5 class="card-title fw-bold text-white mb-0 <%= card.completed ? 'text-decoration-line-through text-white-50' : '' %>">
+                    <%= card.title %>
+                  </h5>
+                  
+                  <% if (card.completed) { %>
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small px-2 py-1">
+                      ✓ Done
+                    </span>
+                  <% } else { %>
+                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small px-2 py-1">
+                      ⏱ Due: <%= card.deadline %>
+                    </span>
+                  <% } %>
+
+                </div>
+                
+                <p class="card-text text-white-50 small mb-0 <%= card.completed ? 'text-decoration-line-through text-opacity-25' : '' %>">
+                  <%= card.text %>
+                </p>
+              </div>
+              
+              <div class="text-nowrap align-self-end align-self-sm-center">
+                <a href="/task/<%= card.id %>" class="btn btn-outline-light btn-sm px-3 fw-medium">
+                  View Details
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        <% }); %> 
+        
+      </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
